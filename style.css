@@ -1,0 +1,22 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.gameboard {
+    margin-top: 50px;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: 0fr 0fr 0fr;
+
+}
+
+.gameboard > .box {
+    background-color: black;
+    border: solid 1px rgb(255, 255, 255);
+    width: 150px;
+    height: 150px;
+}
