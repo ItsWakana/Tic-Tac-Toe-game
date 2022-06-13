@@ -1,30 +1,33 @@
 const myModule = (function () {
 
+    const mainBoard = document.querySelector('[data-game-board]');
+    const boxes = [...mainBoard.querySelectorAll('.box')];
+
     const gameBoard = {
 
         gameBoardArray: [],
-        pushElementsToArray: () => {
 
-            const mainBoard = document.querySelector('[data-game-board]');
-            const boxes = mainBoard.querySelectorAll('.box');
-            gameBoard.gameBoardArray.push(boxes);
-        },
+        playerAnswerToArray(answer) {
+            gameBoard.gameBoardArray.splice(answer, 1, 'x');
+            const dataId = boxes[answer].dataset.id = answer;
+            boxes[answer].innerText = ryan.team;
+        }
     }
-    gameBoard.pushElementsToArray();
 
+    boxes.forEach((box, index) => {
+        box.addEventListener('click', () => {
+            gameBoard.playerAnswerToArray(index);
+        });
+    });
 
+    const Player = (name, team) => {
 
+        
 
-    const createGamePlayer = (name, id) => {
-        return { name, id };
+        return { name, team };
     }
     
-    const james = createGamePlayer('James', 1);
+    const ryan = Player('Ryan', 'X');
+    const computer = Player('comp', 'O');
 
 })();
-
-
-
-
-
-
