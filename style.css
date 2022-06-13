@@ -29,4 +29,5 @@ body {
     align-items: center;
     font-size: 10rem;
     /* pointer-events: none; */
+    cursor: pointer;
 }
