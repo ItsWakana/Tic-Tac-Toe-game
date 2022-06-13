@@ -3,26 +3,33 @@ const myModule = (function () {
     const mainBoard = document.querySelector('[data-game-board]');
     const boxes = [...mainBoard.querySelectorAll('.box')];
 
-    const gameBoard = {
+    const gameBoard = (() => {
 
-        gameBoardArray: [],
+        gameBoardArray = [];
 
-        playerAnswerToArray(answer) {
-            gameBoard.gameBoardArray.splice(answer, 1, 'x');
-            const dataId = boxes[answer].dataset.id = answer;
+        playerAnswerToArray = (answer) => {
+            gameBoardArray.splice(answer, 1, 'x');
+            const playerIndex = boxes[answer].dataset.id = answer;
+            const crosses = boxes[answer].dataset.result = ryan.team;
             boxes[answer].innerText = ryan.team;
         }
-    }
 
-    boxes.forEach((box, index) => {
-        box.addEventListener('click', () => {
-            gameBoard.playerAnswerToArray(index);
+        return { playerAnswerToArray }
+    })();
+
+    const gameLogic = (() => {
+
+        boxes.forEach((box, index) => {
+            box.addEventListener('click', () => {
+                gameBoard.playerAnswerToArray(index);
+            });
         });
-    });
+
+
+
+    })();
 
     const Player = (name, team) => {
-
-        
 
         return { name, team };
     }
