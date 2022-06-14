@@ -1,3 +1,5 @@
+
+
 const myModule = (function () {
 
     const mainBoard = document.querySelector('[data-game-board]');
@@ -38,14 +40,14 @@ const myModule = (function () {
 
             const random = Math.floor(Math.random() * mapped.length);
 
-            return random;
+            return mapped[random];
         }
 
-        boxes.forEach((box, index) => {
+        boxes.forEach(box => {
 
             box.dataset.taken = 'false';
             box.addEventListener('click', () => {
-                gameBoard.playerAnswerToArray(index);
+                gameBoard.playerAnswerToArray(box.dataset.id);
 
                 const computerIndex = computerAnswer();
                 computerAnswerToArray(computerIndex);
