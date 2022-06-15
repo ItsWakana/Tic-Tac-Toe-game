@@ -10,23 +10,51 @@ const myModule = (function () {
         gameBoardArray = [];
 
         playerAnswerToArray = (answer) => {
+
+            if (boxes[answer].dataset.taken == 'true') {
+                return;
+            }
             gameBoardArray.splice(answer, 1, ryan.team);
-            const crosses = boxes[answer].dataset.result = ryan.team;
-            boxes[answer].innerText = ryan.team;
-            boxes[answer].dataset.taken = 'true';
+            // const crosses = boxes[answer].dataset.result = ryan.team;
+            // boxes[answer].innerText = ryan.team;
+            // boxes[answer].dataset.taken = 'true';
         }
 
         computerAnswerToArray = (answer) => {
+
             gameBoardArray.splice(answer, 1, computer.team);
-            const crosses = boxes[answer].dataset.result = computer.team;
-            boxes[answer].innerText = computer.team;
-            boxes[answer].dataset.taken = 'true';
+            // const crosses = boxes[answer].dataset.result = computer.team;
+            // boxes[answer].innerText = computer.team;
+            // boxes[answer].dataset.taken = 'true';
         }
 
         return { playerAnswerToArray, computerAnswerToArray, gameBoardArray }
     })();
 
     const gameLogic = (() => {
+
+        boxes.forEach(box => {
+
+            box.dataset.taken = 'false';
+            box.addEventListener('click', () => {
+                gameBoard.playerAnswerToArray(box.dataset.id);
+                ryan.answerOnDisplay(box.dataset.id);
+
+                const computerIndex = computerAnswer();
+                computerAnswerToArray(computerIndex);
+                computer.answerOnDisplay(computerIndex);
+            });
+        });
+
+    })();
+
+    const Player = (name, team) => {
+
+        let answerOnDisplay = (index) => {
+            boxes[index].dataset.result = name + team;
+            boxes[index].innerText = team;
+            boxes[index].dataset.taken = 'true';
+        }
 
         computerAnswer = () => {
 
@@ -43,25 +71,11 @@ const myModule = (function () {
             return mapped[random];
         }
 
-        boxes.forEach(box => {
-
-            box.dataset.taken = 'false';
-            box.addEventListener('click', () => {
-                gameBoard.playerAnswerToArray(box.dataset.id);
-
-                const computerIndex = computerAnswer();
-                computerAnswerToArray(computerIndex);
-            });
-        });
-
-    })();
-
-    const Player = (name, team) => {
-
-        return { name, team };
+        return { name, team, answerOnDisplay };
     }
     
     const ryan = Player('Ryan', 'X');
     const computer = Player('comp', 'O');
+
 
 })();

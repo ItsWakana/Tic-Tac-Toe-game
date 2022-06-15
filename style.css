@@ -30,4 +30,5 @@ body {
     font-size: 10rem;
     /* pointer-events: none; */
     cursor: pointer;
+    transition: transform 200ms;
 }
