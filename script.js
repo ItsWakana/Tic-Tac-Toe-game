@@ -4,32 +4,18 @@ const myModule = (function () {
 
     const mainBoard = document.querySelector('[data-game-board]');
     const boxes = [...mainBoard.querySelectorAll('.box')];
+    const row1 = [boxes[0],boxes[1],boxes[2]];
+    const row2 = [boxes[3],boxes[4],boxes[5]];
+    const row3 = [boxes[6],boxes[7],boxes[8]];
 
-    const gameBoard = (() => {
+    const col1 = [boxes[0],boxes[3],boxes[6]];
+    const col2 = [boxes[1],boxes[4],boxes[7]];
+    const col3 = [boxes[2],boxes[5],boxes[8]];
 
-        gameBoardArray = [];
+    const diag1 = [boxes[0],boxes[4],boxes[8]];
+    const diag2 = [boxes[2],boxes[4],boxes[6]];
 
-        playerAnswerToArray = (answer) => {
-
-            if (boxes[answer].dataset.taken == 'true') {
-                return;
-            }
-            gameBoardArray.splice(answer, 1, ryan.team);
-            // const crosses = boxes[answer].dataset.result = ryan.team;
-            // boxes[answer].innerText = ryan.team;
-            // boxes[answer].dataset.taken = 'true';
-        }
-
-        computerAnswerToArray = (answer) => {
-
-            gameBoardArray.splice(answer, 1, computer.team);
-            // const crosses = boxes[answer].dataset.result = computer.team;
-            // boxes[answer].innerText = computer.team;
-            // boxes[answer].dataset.taken = 'true';
-        }
-
-        return { playerAnswerToArray, computerAnswerToArray, gameBoardArray }
-    })();
+    let gameBoardArray = [0,1,2,3,4,5,6,7,8];
 
     const gameLogic = (() => {
 
@@ -37,26 +23,49 @@ const myModule = (function () {
 
             box.dataset.taken = 'false';
             box.addEventListener('click', () => {
-                gameBoard.playerAnswerToArray(box.dataset.id);
-                ryan.answerOnDisplay(box.dataset.id);
+                playerMove(box);
+                ryan.checkWin();
 
-                const computerIndex = computerAnswer();
-                computerAnswerToArray(computerIndex);
-                computer.answerOnDisplay(computerIndex);
+                computerMove();
+                computer.checkWin();
             });
         });
+
+        const playerMove = (box) => {
+            if (box.dataset.taken == 'true') {
+                return;
+            }
+            ryan.answerOnDisplay(box.dataset.id);
+        }
+
+        const computerMove = () => {
+            const computerIndex = computer.computerAnswer();
+            computer.answerOnDisplay(computerIndex);
+        }
 
     })();
 
     const Player = (name, team) => {
 
+        const checkWin = () => {
+            const equalsX = (box) => box.dataset.result == team;
+            if (row1.every(equalsX) == true || row2.every(equalsX) == true ||
+                row3.every(equalsX) == true || col1.every(equalsX) == true ||
+                col2.every(equalsX) == true || col3.every(equalsX) == true ||
+                diag1.every(equalsX) == true || diag2.every(equalsX) == true) {
+                console.log(name + ' wins!');
+            }
+
+        }
+
         let answerOnDisplay = (index) => {
-            boxes[index].dataset.result = name + team;
+            gameBoardArray.splice(index, 1, team);
+            boxes[index].dataset.result = team;
             boxes[index].innerText = team;
             boxes[index].dataset.taken = 'true';
         }
 
-        computerAnswer = () => {
+        let computerAnswer = () => {
 
             const freeBlocks = boxes.filter(box => {
                 return box.dataset.taken == 'false';
@@ -71,11 +80,9 @@ const myModule = (function () {
             return mapped[random];
         }
 
-        return { name, team, answerOnDisplay };
+        return { name, team, answerOnDisplay, checkWin, computerAnswer };
     }
     
     const ryan = Player('Ryan', 'X');
-    const computer = Player('comp', 'O');
-
-
+    const computer = Player('Computer', 'O');
 })();

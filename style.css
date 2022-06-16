@@ -28,7 +28,5 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 10rem;
-    /* pointer-events: none; */
     cursor: pointer;
-    transition: transform 200ms;
 }
