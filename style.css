@@ -7,6 +7,10 @@
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -16,6 +20,10 @@ body {
     justify-content: center;
     grid-template-columns: 0fr 0fr 0fr;
 
+}
+
+.gameboard.no-pointer {
+    pointer-events: none;
 }
 
 .gameboard > .box {
@@ -30,15 +38,35 @@ body {
     cursor: pointer;
 }
 
-p {
+.gameboard p {
     transform: scale(0);
     color: white;
     transition: 500ms;
 }
 
-p.show {
+.gameboard p.show {
     transform: scale(1);
 }
+
+.results-table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 2s;
+}
+
+.results-table.show {
+    opacity: 1;
+}
+
+button {
+    width: 15%;
+}
+
+
+
 
 
 

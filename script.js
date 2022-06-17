@@ -1,9 +1,10 @@
 
 
-const myModule = (function () {
+const gameBoardModule = (function () {
 
     const mainBoard = document.querySelector('[data-game-board]');
     const boxes = [...mainBoard.querySelectorAll('.box')];
+    const button = document.querySelector('button');
     const innerAnswerText = [...document.querySelectorAll('p')];
     const row1 = [boxes[0],boxes[1],boxes[2]];
     const row2 = [boxes[3],boxes[4],boxes[5]];
@@ -18,23 +19,12 @@ const myModule = (function () {
 
     let gameBoardArray = [0,1,2,3,4,5,6,7,8];
 
-    const gameLogic = (() => {
+    const game = () => {
 
-        boxes.forEach((box, index) => {
-
+        boxes.forEach((box) => {
             box.dataset.taken = 'false';
             box.addEventListener('click', () => {
-                playerMove(box);
-                if (ryan.checkWin() !== undefined) {
-                    clearTheBoard();
-                    return;
-                }
-
-                computerMove();
-                if (computer.checkWin() !== undefined) {
-                    clearTheBoard();
-                    return;
-                }
+                makeMoves(box);
             });
         });
 
@@ -46,20 +36,40 @@ const myModule = (function () {
         }
 
         const clearTheBoard = () => {
+            mainBoard.classList.remove('no-pointer');
             gameBoardArray = [0,1,2,3,4,5,6,7,8];
             boxes.forEach((box, index) => {
                 box.dataset.taken = 'false';
                 box.dataset.result = '';
                 innerAnswerText[index].classList.remove('show');
             });
-        }
+        };
 
         const computerMove = () => {
             const computerIndex = computer.computerAnswer();
             computer.answerOnDisplay(computerIndex);
         }
 
-    })();
+        const makeMoves = (box) => {
+
+            playerMove(box);
+            if (ryan.checkWin() !== undefined) {
+                ryan.displayGameResult();
+                mainBoard.classList.add('no-pointer');
+                return;
+            }
+
+            // setTimeout(computerMove, 600);
+            computerMove();
+            if (computer.checkWin() !== undefined) {
+                computer.displayGameResult();
+                mainBoard.classList.add('no-pointer');
+                return;
+            }
+        }
+
+        return { clearTheBoard };
+    }
 
     const Player = (name, team) => {
 
@@ -69,9 +79,19 @@ const myModule = (function () {
                 row3.every(equalsX) == true || col1.every(equalsX) == true ||
                 col2.every(equalsX) == true || col3.every(equalsX) == true ||
                 diag1.every(equalsX) == true || diag2.every(equalsX) == true) {
-                alert(name + ' wins!');
+                
                 return name;
             }
+        }
+
+        const displayGameResult = () => {
+            
+            const childNodes = [...document.querySelector('.results-table').childNodes];
+            childNodes[3].innerText = name + ' has won the round!';
+
+            const resultsTable = document.querySelector('.results-table');
+            resultsTable.classList.add('show');
+
         }
 
         let answerOnDisplay = (index) => {
@@ -97,9 +117,14 @@ const myModule = (function () {
             return mapped[random];
         }
 
-        return { name, team, answerOnDisplay, checkWin, computerAnswer };
+        return { name, team, answerOnDisplay, checkWin, computerAnswer, displayGameResult };
     }
     
     const ryan = Player('Ryan', 'X');
     const computer = Player('Computer', 'O');
+
+    button.addEventListener('click', () => {
+        game().clearTheBoard();
+    });
+
 })();
