@@ -24,7 +24,14 @@ const myModule = (function () {
             box.dataset.taken = 'false';
             box.addEventListener('click', () => {
                 playerMove(box);
-                ryan.checkWin();
+                const playerWinCheck = ryan.checkWin(box);
+                console.log(playerWinCheck)
+
+                if (playerWinCheck !== undefined) {
+                    gameBoardArray = [0,1,2,3,4,5,6,7,8];
+                    clearTheBoard();
+                    return;
+                }
 
                 computerMove();
                 computer.checkWin();
@@ -38,6 +45,14 @@ const myModule = (function () {
             ryan.answerOnDisplay(box.dataset.id);
         }
 
+        const clearTheBoard = () => {
+            boxes.forEach(box => {
+                box.dataset.taken = 'false';
+                box.dataset.result = '';
+                box.innerText = '';
+            });
+        }
+
         const computerMove = () => {
             const computerIndex = computer.computerAnswer();
             computer.answerOnDisplay(computerIndex);
@@ -47,13 +62,15 @@ const myModule = (function () {
 
     const Player = (name, team) => {
 
-        const checkWin = () => {
+        const checkWin = (box) => {
             const equalsX = (box) => box.dataset.result == team;
             if (row1.every(equalsX) == true || row2.every(equalsX) == true ||
                 row3.every(equalsX) == true || col1.every(equalsX) == true ||
                 col2.every(equalsX) == true || col3.every(equalsX) == true ||
                 diag1.every(equalsX) == true || diag2.every(equalsX) == true) {
-                console.log(name + ' wins!');
+                alert(name + ' wins!');
+                return name;
+                
             }
 
         }
@@ -61,7 +78,7 @@ const myModule = (function () {
         let answerOnDisplay = (index) => {
             gameBoardArray.splice(index, 1, team);
             boxes[index].dataset.result = team;
-            boxes[index].innerText = team;
+            boxes[index].innerText = gameBoardArray[index];
             boxes[index].dataset.taken = 'true';
         }
 
