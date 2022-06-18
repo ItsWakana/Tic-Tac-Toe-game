@@ -23,9 +23,9 @@ const gameBoardModule = (function () {
 
         boxes.forEach((box) => {
             box.dataset.taken = 'false';
-            box.addEventListener('click', () => {
+            box.onclick = () => {
                 makeMoves(box);
-            });
+            };
         });
 
         const playerMove = (box) => {
@@ -124,6 +124,8 @@ const gameBoardModule = (function () {
     const computer = Player('Computer', 'O');
 
     button.addEventListener('click', () => {
+        const resultsTable = document.querySelector('.results-table');
+        resultsTable.classList.remove('show');
         game().clearTheBoard();
     });
 
