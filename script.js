@@ -28,13 +28,6 @@ const gameBoardModule = (function () {
             };
         });
 
-        const playerMove = (box) => {
-            if (box.dataset.taken == 'true') {
-                return;
-            }
-            ryan.answerOnDisplay(box.dataset.id);
-        }
-
         const clearTheBoard = () => {
             mainBoard.classList.remove('no-pointer');
             gameBoardArray = [0,1,2,3,4,5,6,7,8];
@@ -45,14 +38,9 @@ const gameBoardModule = (function () {
             });
         };
 
-        const computerMove = () => {
-            const computerIndex = computer.computerAnswer();
-            computer.answerOnDisplay(computerIndex);
-        }
-
         const makeMoves = (box) => {
 
-            playerMove(box);
+            ryan.playerMove(box);
             if (ryan.checkWin() !== undefined) {
                 ryan.displayGameResult();
                 mainBoard.classList.add('no-pointer');
@@ -60,7 +48,7 @@ const gameBoardModule = (function () {
             }
 
             // setTimeout(computerMove, 600);
-            computerMove();
+            computer.computerMove();
             if (computer.checkWin() !== undefined) {
                 computer.displayGameResult();
                 mainBoard.classList.add('no-pointer');
@@ -72,6 +60,18 @@ const gameBoardModule = (function () {
     }
 
     const Player = (name, team) => {
+
+        const playerMove = (box) => {
+            if (box.dataset.taken == 'true') {
+                return;
+            }
+            ryan.answerOnDisplay(box.dataset.id);
+        }
+
+        const computerMove = () => {
+            const computerIndex = computer.computerAnswer();
+            computer.answerOnDisplay(computerIndex);
+        }
 
         const checkWin = () => {
             const equalsX = (box) => box.dataset.result == team;
@@ -117,7 +117,7 @@ const gameBoardModule = (function () {
             return mapped[random];
         }
 
-        return { name, team, answerOnDisplay, checkWin, computerAnswer, displayGameResult };
+        return { name, team, answerOnDisplay, checkWin, computerAnswer, displayGameResult, playerMove, computerMove };
     }
     
     const ryan = Player('Ryan', 'X');
