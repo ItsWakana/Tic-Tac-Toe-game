@@ -10,6 +10,8 @@ const gameBoardModule = (() => {
 
     const gameLogic = (() => {
 
+        
+
         const row1 = [boxes[0],boxes[1],boxes[2]];
         const row2 = [boxes[3],boxes[4],boxes[5]];
         const row3 = [boxes[6],boxes[7],boxes[8]];
@@ -78,7 +80,6 @@ const gameBoardModule = (() => {
 
         const gameRound = (newPlayer) => {
             gameLogic.myPlayers.splice(0, 1 ,newPlayer);
-            console.log(gameLogic.myPlayers[0].name);
             gameLogic.closeModal(modal,overlay);
             const resultsTable = document.querySelector('.results-table');
             resultsTable.classList.remove('show');

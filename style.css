@@ -6,6 +6,12 @@
     padding: 0;
 }
 
+:root {
+    --background-clr: #f2643d;
+    --board-clr: #ffffff;
+    --border-and-text-clr: #000000;
+}
+
 body {
     position: relative;
     display: flex;
@@ -13,6 +19,8 @@ body {
     align-items: center;
     margin-top: 50px;
     font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--background-clr);
+    font-size: 1.5rem;
 }
 
 .gameboard {
@@ -20,6 +28,9 @@ body {
     display: grid;
     justify-content: center;
     grid-template-columns: 0fr 0fr 0fr;
+    background-color: var(--board-clr);
+    border-radius: 14px;
+    border: solid 4px var(--border-and-text-clr);
 
 }
 
@@ -28,8 +39,8 @@ body {
 }
 
 .gameboard > .box {
-    background-color: black;
-    border: solid 1px rgb(255, 255, 255);
+    border-right: solid 2px var(--border-and-text-clr);
+    border-bottom: solid 2px var(--border-and-text-clr);
     width: 150px;
     height: 150px;
     display: flex;
@@ -41,8 +52,9 @@ body {
 
 .gameboard p {
     transform: scale(0);
-    color: white;
+    color: var(--border-and-text-clr);
     transition: 500ms;
+
 }
 
 .gameboard p.show {
@@ -56,14 +68,28 @@ body {
     justify-content: center;
     opacity: 0;
     transition: 1.5s;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: var(--board-clr);
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 20px;
+    box-shadow: 7px 7px 0px 1px var(--border-and-text-clr);
 }
 
 .results-table.show {
     opacity: 1;
 }
-
 button {
+    font-size: 1rem;
     min-width: 10%;
+    box-shadow: 2px 2px 0px 1px var(--border-and-text-clr);
+    font-weight: bold;
+}
+
+button.submit {
+    background-color: var(--background-clr);
+    color: var(--board-clr);
 }
 
 .user-input {
@@ -72,8 +98,8 @@ button {
     width: 20%;
     min-width: 260px;
     height: 20%;
-    border: solid 2px white;
-    background-color: darkgray;
+    border-radius: 12px;
+    background-color: var(--board-clr);
     visibility: hidden;
     transform: scale(0);
     transition: 0.2s;
@@ -96,7 +122,8 @@ button {
 .user-form input {
     border: none;
     border-radius: 8px;
-    padding-left: 7px;
+    padding: 7px;
+    border: solid 2px var(--border-and-text-clr);
 }
 
 button {
