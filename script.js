@@ -31,7 +31,7 @@ const gameBoardModule = (() => {
         return { display, array, clearDisplay }
     })();
 
-    
+
     //contains all of our game logic
     const game = (() => {    
                 
@@ -176,5 +176,20 @@ const gameBoardModule = (() => {
     
         
         return { startGame, checkWinner }
+
+        
         
       })();
+
+        //factory function that produces our player object taking in name and team
+    const player = (name, team) => {
+        
+        return { name, team };
+    }
+    
+    const ryan = player('ryan', 'X');
+    const computer = player('computer', 'O');
+  
+  
+  
+})();
