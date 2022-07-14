@@ -2,17 +2,16 @@ const gameBoardModule = (() => {
     const mainBoard = document.querySelector('[data-game-board]');
     const boxes = [...mainBoard.querySelectorAll('.box')];
     const button = document.querySelector('.start-game');
+    const startButton = document.querySelector('.submit');
     const innerAnswerText = [...document.querySelectorAll('p')];
+    const overlay = document.getElementById('overlay');
+    const modal = document.getElementById('modal');
 
     const gameBoard = (() => {
         //stores current gameboard as an array
         let array = ['','','','','','','','',''];
-        let a = array;
-      
-        //clears the gameBoard display
-        button.addEventListener('click', () => {
-          clearDisplay();
-        });
+        let currentPlayer;
+        let myPlayers = [];
       
         //game display that renders the contents of array to gameboard
         const display = (index, name) => {
@@ -26,149 +25,182 @@ const gameBoardModule = (() => {
           gameBoard.array = ['','','','','','','','',''];
           innerAnswerText.forEach(text => text.innerText = '');
         }
+    
+        const addNewPlayer = (e) => {
+          e.preventDefault()
+          const input = document.getElementById('name').value;
+          const user = Player(input, 'X');
+  
+          return user;
+        }
+
+        const openModal = () => {
+          if (modal == null) {
+            return;
+          }
+          modal.classList.add('active');
+          overlay.classList.add('active');
+        }
+
+        const closeModal = () => {
+          if (modal == null) {
+            return;
+          }
+          modal.classList.remove('active');
+          overlay.classList.remove('active');
+        }
   
       
-        return { display, array, clearDisplay }
+        return { display, array, clearDisplay, currentPlayer, addNewPlayer, openModal, closeModal, myPlayers };
     })();
 
 
     //contains all of our game logic
-    const game = (() => {    
+    const game = (() => {
+      
+        button.addEventListener('click', () => {
+          gameBoard.openModal();
+        });
+
+        overlay.addEventListener('click', () => {
+          gameBoard.closeModal();
+        });
+
+        startButton.addEventListener('click', (e) => {
+          let newPlayer = gameBoard.addNewPlayer(e);
+          gameBoard.myPlayers.push(newPlayer);
+          gameBoard.clearDisplay();
+          gameBoard.closeModal();
+          //loop through our html boxes and apply event listeners to each square that will initiate the players round
+          boxes.forEach((square, index) => {
+            square.onclick = () => {
+              startGame(index);
+            }
+          }); 
+        });
                 
         //starts our game and controls the flow of player vs ai
         const startGame = (index) => {
           //game display that takes in the players click index and renders the             contents of array to gameboard
-          gameBoard.display(index, ryan);  
-          let result = checkWinner(ryan);
-          if (result !== undefined) {
-            console.log(result + ' has won the round!');
+          gameBoard.display(index, gameBoard.myPlayers[0]);  
+          gameBoard.currentPlayer = 'X';
+          if (checkWinner(gameBoard.currentPlayer) !== null) {
+            console.log(gameBoard.currentPlayer + ' has won the round!');
             return;
           }
           //computers turn that takes a random choice from the indexes that are           empty and prints it to the board
           
-          // let compIndex = computerAnswer();
           let compMove;
           let bestScore = -Infinity;
-          gameBoard.array.forEach((item,index) => {
-            if (item == '') {
-              item = 'O';
+          for (let i = 0; i < 8; i++) {
+            if (gameBoard.array[i] == '') {
+              gameBoard.array[i] = 'O';
               let score = minimax(gameBoard.array, 0, false);
-              item = '';
+              gameBoard.array[i] = '';
               if (score > bestScore) {
                 bestScore = score;
-                compMove = index;
+                compMove = i;
               }
             }
-          });
-          console.log(compMove);
+          }
           gameBoard.display(compMove, computer);
-    
-          result = checkWinner(computer);
-          if (result !== undefined) {
-            console.log(result + ' has won the round!');
+          gameBoard.currentPlayer = 'O';
+          if (checkWinner(gameBoard.currentPlayer) !== null) {
+            console.log(gameBoard.currentPlayer + ' has won the round!');
             return;
           }
-        }
-        
-        //loop through our html boxes and apply event listeners to each square that       will initiate the players round
-        boxes.forEach((square, index) => {
-          square.onclick = () => {
-            startGame(index);
-          }
-        });   
+        } 
         
         //checks for a win or a tie using current player variable to check whose turn     it is
-        const checkWinner = (name) => {
+        const checkWinner = (player) => {
+          let winner = null;
           let a = gameBoard.array;
+
+          let openSpaces = 0;
           //horizontal win check
-          if (a[0] == name.team && a[1] == name.team && a[2] == name.team) {
-            return name.team
+          if (a[0] == player && a[1] == player && a[2] == player) {
+            winner = player;
           }
-          if (a[3] == name.team && a[4] == name.team && a[5] == name.team) {
-            return name.team
+          if (a[3] == player && a[4] == player && a[5] == player) {
+            winner = player;
           }
-          if (a[6] == name.team && a[7] == name.team && a[8] == name.team) {
-            return name.team
+          if (a[6] == player && a[7] == player && a[8] == player) {
+            winner = player;
           }
           
           //vertical win check
-          if (a[0] == name.team && a[3] == name.team && a[6] == name.team) {
-            return name.team
+          if (a[0] == player && a[3] == player && a[6] == player) {
+            winner = player;
           }
-          if (a[1] == name.team && a[4] == name.team && a[7] == name.team) {
-            return name.team
+          if (a[1] == player && a[4] == player && a[7] == player) {
+            winner = player;
           }
-          if (a[2] == name.team && a[5] == name.team && a[8] == name.team) {
-            return name.team
+          if (a[2] == player && a[5] == player && a[8] == player) {
+            winner = player;
           }
           
           //diagonal win check
-          if (a[0] == name.team && a[4] == name.team && a[8] == name.team) {
-            return name.team
+          if (a[0] == player && a[4] == player && a[8] == player) {
+            winner = player;
           }
-          if (a[2] == name.team && a[4] == name.team && a[6] == name.team) {
-            return name.team
+          if (a[2] == player && a[4] == player && a[6] == player) {
+            winner = player;
           }
+
+          for (let i=0; i < 8; i++) {
+            if (gameBoard.array[i] == '') {
+              openSpaces++;
+            }
+          }
+
+          if (winner == null && openSpaces == 0) {
+            return 'tie';
+          }
+
+          return winner;
+
         }
-          //generates a random answer from the available spots on the board
-          const computerAnswer = () => {
-            let originalIndex = [];
-            const filtered = gameBoard.array.filter((item,index) => item == '');
-            gameBoard.array.forEach((item,index) => {
-              if (item == '') {
-                originalIndex.push(index);
-              }
-            });
-            
-            const random = Math.floor(Math.random() * originalIndex.length);
-            return originalIndex[random];
-          }
           
           let scores = {
-            X: 10,
-            O: -10,
+            X: -10,
+            O: 10,
             tie: 0
           }
           
           const minimax = (board, depth, maximizingPlayer) => {
-            let resultPlayer = checkWinner(ryan);
-            let resultComputer = checkWinner(computer);
+            let result = checkWinner(gameBoard.currentPlayer);
             
-            if (resultPlayer !== undefined) {
-              let score = scores[result];
-              return score;
-            }
-            if (resultComputer !== undefined) {
-              let score = scores[result];
-              return score;
+            if (result !== null) {
+              return scores[result];
             }
             
             if (maximizingPlayer) {
               let bestScore = -Infinity;
-              gameBoard.array.forEach((item,index) => {
-                if (item == '') {
-                  item = 'X';
+              for (let i = 0; i < 8; i++) {
+              
+                if (board[i] == '') {
+                  board[i] = 'X';
                   let score = minimax(board, depth + 1, false);
-                  item = '';
+                  board[i] = '';
                   if (score > bestScore) {
                     bestScore = score;
                   }
                 }
-              });
-              
+              }
               return bestScore;
+
             } else {
-                let bestScore = -Infinity;
-                gameBoard.array.forEach((item,index) => {
-                  if (item == '') {
-                    item = 'X';
-                    let score = minimax(board, depth + 1, false);
-                    item = '';
+                let bestScore = Infinity;
+                for (let i = 0; i < 8; i++) {
+                  if (board[i] == '') {
+                    board[i] = 'O';
+                    let score = minimax(board, depth + 1, true);
+                    board[i] = '';
                     if (score < bestScore) {
                       bestScore = score;
                     }
                   }
-                });
+                }
     
                 return bestScore;
             }
@@ -182,13 +214,12 @@ const gameBoardModule = (() => {
       })();
 
         //factory function that produces our player object taking in name and team
-    const player = (name, team) => {
+    const Player = (name, team) => {
         
         return { name, team };
     }
     
-    const ryan = player('ryan', 'X');
-    const computer = player('computer', 'O');
+    const computer = Player('computer', 'O');
   
   
   
