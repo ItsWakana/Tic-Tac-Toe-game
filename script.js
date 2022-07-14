@@ -24,6 +24,9 @@ const gameBoardModule = (() => {
         const clearDisplay = () => {
           gameBoard.array = ['','','','','','','','',''];
           innerAnswerText.forEach(text => text.innerText = '');
+          const results = document.querySelector('.results-table');
+          results.classList.remove('active');
+
         }
     
         const addNewPlayer = (e) => {
@@ -49,9 +52,19 @@ const gameBoardModule = (() => {
           modal.classList.remove('active');
           overlay.classList.remove('active');
         }
+
+        const gameOver = (currentPlayer) => {
+          const results = document.querySelector('.results-table');
+          const textResult = results.querySelector('p');
+
+          textResult.innerText = currentPlayer + ' has won the round!'
+          results.classList.add('active');
+          mainBoard.classList.add('no-pointer');
+
+        };
   
       
-        return { display, array, clearDisplay, currentPlayer, addNewPlayer, openModal, closeModal, myPlayers };
+        return { display, array, clearDisplay, currentPlayer, addNewPlayer, openModal, closeModal, myPlayers, gameOver };
     })();
 
 
@@ -67,6 +80,8 @@ const gameBoardModule = (() => {
         });
 
         startButton.addEventListener('click', (e) => {
+          mainBoard.classList.remove('no-pointer');
+
           let newPlayer = gameBoard.addNewPlayer(e);
           gameBoard.myPlayers.push(newPlayer);
           gameBoard.clearDisplay();
@@ -81,11 +96,15 @@ const gameBoardModule = (() => {
                 
         //starts our game and controls the flow of player vs ai
         const startGame = (index) => {
+
           //game display that takes in the players click index and renders the             contents of array to gameboard
+          if (gameBoard.array[index] == 'X' || gameBoard.array[index] == 'O') {
+            return;
+          }
           gameBoard.display(index, gameBoard.myPlayers[0]);  
           gameBoard.currentPlayer = 'X';
           if (checkWinner(gameBoard.currentPlayer) !== null) {
-            console.log(gameBoard.currentPlayer + ' has won the round!');
+            gameBoard.gameOver(gameBoard.currentPlayer);
             return;
           }
           //computers turn that takes a random choice from the indexes that are           empty and prints it to the board
@@ -106,7 +125,7 @@ const gameBoardModule = (() => {
           gameBoard.display(compMove, computer);
           gameBoard.currentPlayer = 'O';
           if (checkWinner(gameBoard.currentPlayer) !== null) {
-            console.log(gameBoard.currentPlayer + ' has won the round!');
+            gameBoard.gameOver(gameBoard.currentPlayer);
             return;
           }
         } 
