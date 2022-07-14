@@ -83,7 +83,7 @@ const gameBoardModule = (() => {
           mainBoard.classList.remove('no-pointer');
 
           let newPlayer = gameBoard.addNewPlayer(e);
-          gameBoard.myPlayers.push(newPlayer);
+          gameBoard.myPlayers.splice(0, 1, newPlayer);
           gameBoard.clearDisplay();
           gameBoard.closeModal();
           //loop through our html boxes and apply event listeners to each square that will initiate the players round
@@ -104,7 +104,7 @@ const gameBoardModule = (() => {
           gameBoard.display(index, gameBoard.myPlayers[0]);  
           gameBoard.currentPlayer = 'X';
           if (checkWinner(gameBoard.currentPlayer) !== null) {
-            gameBoard.gameOver(gameBoard.currentPlayer);
+            gameBoard.gameOver(gameBoard.myPlayers[0].name);
             return;
           }
           //computers turn that takes a random choice from the indexes that are           empty and prints it to the board
@@ -125,7 +125,7 @@ const gameBoardModule = (() => {
           gameBoard.display(compMove, computer);
           gameBoard.currentPlayer = 'O';
           if (checkWinner(gameBoard.currentPlayer) !== null) {
-            gameBoard.gameOver(gameBoard.currentPlayer);
+            gameBoard.gameOver('The ' + computer.name);
             return;
           }
         } 
