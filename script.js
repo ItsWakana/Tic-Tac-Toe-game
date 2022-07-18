@@ -53,11 +53,11 @@ const gameBoardModule = (() => {
           overlay.classList.remove('active');
         }
 
-        const gameOver = (currentPlayer) => {
+        const gameOver = (result) => {
           const results = document.querySelector('.results-table');
           const textResult = results.querySelector('p');
 
-          textResult.innerText = currentPlayer + ' has won the round!'
+          textResult.innerText = result;
           results.classList.add('active');
           mainBoard.classList.add('no-pointer');
 
@@ -102,9 +102,15 @@ const gameBoardModule = (() => {
           }
           gameBoard.display(index, gameBoard.myPlayers[0]);  
           gameBoard.currentPlayer = 'X';
-          if (checkWinner(gameBoard.currentPlayer) !== null) {
-            gameBoard.gameOver(gameBoard.myPlayers[0].name);
+          let gameResultPlayer = checkWinner(gameBoard.currentPlayer);
+
+          if (gameResultPlayer !== null) {
+            if (gameResultPlayer == 'tie') {
+              gameBoard.gameOver('It was a tie');
+            } else {
+            gameBoard.gameOver(gameBoard.myPlayers[0].name + ' has won the round!');
             return;
+            }
           }
           //computers turn that takes a random choice from the indexes that are           empty and prints it to the board
           
@@ -123,9 +129,15 @@ const gameBoardModule = (() => {
           }
           gameBoard.display(compMove, computer);
           gameBoard.currentPlayer = 'O';
-          if (checkWinner(gameBoard.currentPlayer) !== null) {
-            gameBoard.gameOver('The ' + computer.name);
+          let gameResultComputer = checkWinner(gameBoard.currentPlayer);
+          if (gameResultComputer !== null) {
+
+            if (gameResultComputer == 'tie') {
+              gameBoard.gameOver('It was a tie');
+            } else {
+            gameBoard.gameOver('The ' + computer.name + ' has won the round!');
             return;
+            }
           }
         } 
         
