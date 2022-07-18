@@ -50,6 +50,15 @@ body {
     cursor: pointer;
 }
 
+.gameboard p {
+    transform: scale(0);
+    transition: 500ms;
+}
+
+.gameboard p.show {
+    transform: scale(1);
+}
+
 .results-table {
     display: flex;
     flex-direction: column;
@@ -74,6 +83,16 @@ button {
     min-width: 10%;
     box-shadow: 2px 2px 0px 1px var(--border-and-text-clr);
     font-weight: bold;
+}
+
+.start-game {
+    color: black;
+    transition: transform 300ms;
+}
+
+.start-game.clicked {
+    color: green;
+    transform: scale(2);
 }
 
 button.submit {

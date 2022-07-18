@@ -18,12 +18,14 @@ const gameBoardModule = (() => {
           //renders players click to the board, taking in the index of the square
           gameBoard.array.splice(index, 1, name.team);
           innerAnswerText[index].innerText = gameBoard.array[index];
+          innerAnswerText[index].classList.add('show');
         }
         
         //clears the array and display
         const clearDisplay = () => {
           gameBoard.array = ['','','','','','','','',''];
-          innerAnswerText.forEach(text => text.innerText = '');
+          innerAnswerText.forEach(text => text.classList.remove('show'));
+          // innerAnswerText.forEach(text => text.innerText = '');
           const results = document.querySelector('.results-table');
           results.classList.remove('active');
 
@@ -54,6 +56,7 @@ const gameBoardModule = (() => {
         }
 
         const gameOver = (result) => {
+          button.classList.remove('clicked');
           const results = document.querySelector('.results-table');
           const textResult = results.querySelector('p');
 
@@ -79,6 +82,7 @@ const gameBoardModule = (() => {
         });
 
         startButton.addEventListener('click', (e) => {
+          button.classList.add('clicked');
           mainBoard.classList.remove('no-pointer');
 
           let newPlayer = gameBoard.addNewPlayer(e);
@@ -95,7 +99,7 @@ const gameBoardModule = (() => {
                 
         //starts our game and controls the flow of player vs ai
         const startGame = (index) => {
-
+          
           //game display that takes in the players click index and renders the             contents of array to gameboard
           if (gameBoard.array[index] == 'X' || gameBoard.array[index] == 'O') {
             return;
