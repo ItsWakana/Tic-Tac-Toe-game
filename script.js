@@ -62,7 +62,6 @@ const gameBoardModule = (() => {
           mainBoard.classList.add('no-pointer');
 
         };
-  
       
         return { display, array, clearDisplay, currentPlayer, addNewPlayer, openModal, closeModal, myPlayers, gameOver };
     })();
@@ -110,13 +109,13 @@ const gameBoardModule = (() => {
           //computers turn that takes a random choice from the indexes that are           empty and prints it to the board
           
           let compMove;
-          let bestScore = -Infinity;
-          for (let i = 0; i < 8; i++) {
+          let bestScore = Infinity;
+          for (let i = 0; i < 9; i++) {
             if (gameBoard.array[i] == '') {
               gameBoard.array[i] = 'O';
-              let score = minimax(gameBoard.array, 0, false);
+              let score = minimax(gameBoard.array, 0, true);
               gameBoard.array[i] = '';
-              if (score > bestScore) {
+              if (score < bestScore) {
                 bestScore = score;
                 compMove = i;
               }
@@ -181,13 +180,13 @@ const gameBoardModule = (() => {
         }
           
           let scores = {
-            X: -10,
-            O: 10,
+            X: 10,
+            O: -10,
             tie: 0
           }
           
           const minimax = (board, depth, maximizingPlayer) => {
-            let result = checkWinner(gameBoard.currentPlayer);
+            let result = checkWinner('XO' [+maximizingPlayer]);
             
             if (result !== null) {
               return scores[result];
@@ -195,7 +194,7 @@ const gameBoardModule = (() => {
             
             if (maximizingPlayer) {
               let bestScore = -Infinity;
-              for (let i = 0; i < 8; i++) {
+              for (let i = 0; i < 9; i++) {
               
                 if (board[i] == '') {
                   board[i] = 'X';
@@ -210,7 +209,7 @@ const gameBoardModule = (() => {
 
             } else {
                 let bestScore = Infinity;
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < 9; i++) {
                   if (board[i] == '') {
                     board[i] = 'O';
                     let score = minimax(board, depth + 1, true);
@@ -224,22 +223,14 @@ const gameBoardModule = (() => {
                 return bestScore;
             }
           }
-    
         
         return { startGame, checkWinner }
-
-        
-        
       })();
 
         //factory function that produces our player object taking in name and team
     const Player = (name, team) => {
-        
         return { name, team };
     }
     
     const computer = Player('computer', 'O');
-  
-  
-  
 })();
